@@ -1,5 +1,3 @@
-
-Render server · PY
 # -*- coding: utf-8 -*-
 """
 AERAL LINE: one Render Web Service for the Streamlit website + Telegram webhook.
