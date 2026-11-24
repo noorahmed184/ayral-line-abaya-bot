@@ -3,7 +3,7 @@ import numpy as np
 from PIL import Image
 from openai import OpenAI, APIStatusError, APIConnectionError, APITimeoutError
 from sentence_transformers import SentenceTransformer
-from google.colab import userdata
+
 
 PROJECT = os.path.dirname(os.path.abspath(__file__))
 
@@ -47,14 +47,9 @@ SKIP_MODEL_CODES = (400, 404)
 
 def get_api_key():
     key = os.environ.get("GEMINI_API_KEY")
-    if key:
-        return key
-    try:
-        from google.colab import userdata
-        return userdata.get("bot2")
-    except Exception:
-        raise RuntimeError("Place the key GEMINI_API_KEY")
-
+    if not key:
+        raise RuntimeError("Set GEMINI_API_KEY")
+    return key
 
 def to_block(img: Image.Image) -> dict:
     img = img.convert("RGB")
@@ -156,8 +151,10 @@ class AbayaBot:
                             handoff = "غير مححدد"
                     self.history.append({"role": "tool", "tool_call_id": call.id,
                                          "content": "تم إشعار الموظفة."})
-        except Exception:
+        except Exception as e:
+            print("model error:", repr(e))
             del self.history[start:]
+            raise
 
         self.history[start]["content"] = [b for b in self.history[start]["content"] if b["type"] == "text"]
         return msg.content or "", handoff
