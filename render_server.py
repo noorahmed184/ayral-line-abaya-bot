@@ -259,7 +259,7 @@ async def start_background_services(app: web.Application):
         url=webhook_url,
         secret_token=WEBHOOK_SECRET or None,
         allowed_updates=Update.ALL_TYPES,
-        drop_pending_updates=True,
+        drop_pending_updates=False,
     )
     log.info("Telegram webhook configured: %s", webhook_url)
 
@@ -269,7 +269,6 @@ async def stop_background_services(app: web.Application):
 
     if telegram_app is not None:
         try:
-            await telegram_app.bot.delete_webhook()
             await telegram_app.stop()
             await telegram_app.shutdown()
         except Exception:
