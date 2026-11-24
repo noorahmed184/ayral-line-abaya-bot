@@ -1,0 +1,7 @@
+openai
+sentence-transformers
+pillow
+numpy
+gradio
+streamlit
+python-telegram-bot
