@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 import asyncio
 import logging
@@ -16,29 +18,39 @@ from bot_core import AbayaBot
 from notifications import notify_staff
 
 
-# Logging
+# ───────────────────────── Logging ─────────────────────────
+
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     level=logging.INFO
 )
 
-# Environment Variables
-TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("httpcore").setLevel(logging.WARNING)
+
+
+# ───────────────────────── Environment ─────────────────────────
+
+TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
 
 ERROR_MSG = "عذراً، صار خطأ. حاولي مرة ثانية 🌸"
 
-# Store bot instances by chat
+# Separate conversation for each Telegram chat
 bots = {}
 
 
+# ───────────────────────── Get bot ─────────────────────────
+
 def get_bot(chat_id):
+
     if chat_id not in bots:
         bots[chat_id] = AbayaBot()
 
     return bots[chat_id]
 
 
-# Start command
+# ───────────────────────── Start command ─────────────────────────
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     chat_id = update.effective_chat.id
@@ -51,7 +63,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
-# Handle messages
+# ───────────────────────── Handle messages ─────────────────────────
+
 async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     msg = update.effective_message
@@ -61,7 +74,7 @@ async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     image_bytes = None
 
-    # Download image if available
+    # Download customer image
     if msg.photo:
 
         photo = await msg.photo[-1].get_file()
@@ -80,7 +93,10 @@ async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     try:
 
-        bot = await asyncio.to_thread(get_bot, chat_id)
+        bot = await asyncio.to_thread(
+            get_bot,
+            chat_id
+        )
 
         answer, handoff = await asyncio.to_thread(
             bot.reply,
@@ -96,7 +112,9 @@ async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         return
 
-    await msg.reply_text(answer or "حاولي مرة ثانية 🌸")
+    await msg.reply_text(
+        answer or "حاولي مرة ثانية 🌸"
+    )
 
     # Notify staff if conversation needs handoff
     if handoff:
@@ -128,6 +146,8 @@ async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
             logging.exception("Staff notification error")
 
 
+# ───────────────────────── Main ─────────────────────────
+
 def main():
 
     if not TOKEN:
@@ -152,9 +172,11 @@ def main():
         )
     )
 
-    logging.info("Telegram Bot is starting...")
+    logging.info("AERAL LINE Telegram Bot is starting with Polling...")
 
-    application.run_polling()
+    application.run_polling(
+        drop_pending_updates=False
+    )
 
 
 if __name__ == "__main__":
