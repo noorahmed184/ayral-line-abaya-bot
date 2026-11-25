@@ -35,6 +35,33 @@ TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
 
 ERROR_MSG = "عذراً، صار خطأ. حاولي مرة ثانية 🌸"
 
+
+WEBSITE_URL = "https://stapppy-uhrrpvbqcsxgnxjg9rvsgu.streamlit.app/"
+
+WEBSITE_KEYWORDS = [
+    "موقعكم",
+    "موقعكم الالكتروني",
+    "رابط الموقع",
+    "حسابكم",
+    "حساب المحل",
+    "وين حسابكم",
+    "وين اشوف العبايات",
+    "أشوف العبايات",
+    "اشوف العبايات",
+    "الكولكشن",
+    "المتجر الالكتروني",
+    "متجركم",
+    "website",
+    "your website",
+    "instagram",
+    "حساب الانستقرام"
+]
+
+def asks_for_website(text):
+    text = (text or "").lower()
+    return any(word in text for word in WEBSITE_KEYWORDS)
+
+
 # Separate conversation for each Telegram chat
 bots = {}
 
