@@ -112,6 +112,17 @@ async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if not text and not image_bytes:
         return
+        
+    if text and asks_for_website(text):
+    await msg.reply_text(
+        "أكيد! 🌸 تقدرين تشوفين عباياتنا والكولكشن من خلال موقعنا:\n\n"
+        f"{WEBSITE_URL}\n\n"
+        "حياج الله في AERAL LINE 💗")
+    return
+    
+    await context.bot.send_chat_action(
+    chat_id=chat_id,
+    action=ChatAction.TYPING )
 
     await context.bot.send_chat_action(
         chat_id=chat_id,
