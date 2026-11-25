@@ -35,7 +35,7 @@ INSTAGRAM_URL = os.environ.get(
 
 INSTAGRAM_HANDLE = os.environ.get(
     "INSTAGRAM_HANDLE",
-    "@aryal.line"
+    "@ayral.line"
 )
 
 WHATSAPP_NUMBER = os.environ.get(
@@ -211,43 +211,35 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 
 @st.cache_data(show_spinner=False)
 def load_catalog():
-
     try:
         with open(
             os.path.join(PROJECT, "catalog.json"),
             encoding="utf-8-sig"
         ) as f:
-
             return json.load(f)
 
     except Exception as e:
-
         print("Catalog error:", repr(e))
         return []
 
 
 @st.cache_data(show_spinner=False)
 def load_store_info():
-
     try:
         with open(
             os.path.join(PROJECT, "store_info.md"),
             encoding="utf-8-sig"
         ) as f:
-
             return f.read()
 
     except Exception as e:
-
         print("Store info error:", repr(e))
         return ""
 
 
 @st.cache_data(show_spinner=False)
 def thumb_bytes(name):
-
     try:
-
         with Image.open(
             os.path.join(PROJECT, "images", name)
         ) as im:
@@ -256,17 +248,11 @@ def thumb_bytes(name):
             im.thumbnail((600, 800))
 
             buf = io.BytesIO()
-
-            im.save(
-                buf,
-                "JPEG",
-                quality=85
-            )
+            im.save(buf, "JPEG", quality=85)
 
             return buf.getvalue()
 
     except Exception as e:
-
         print("Image error:", name, repr(e))
         return None
 
@@ -276,53 +262,61 @@ catalog = load_catalog()
 
 # ───────────────────────── Hero section ─────────────────────────
 
-st.markdown(f"""
-<div id="hero">
+st.markdown(
+    f"""
+    <div id="hero">
 
-    <p class="brand">{BRAND}</p>
+        <p class="brand">{BRAND}</p>
 
-    <p class="title">
-        مساعدتج الخاصة للعبايات
-    </p>
+        <p class="title">
+            مساعدتج الخاصة للعبايات
+        </p>
 
-    <p class="sub">
-        اختاري إطلالتج بثقة — {TAGLINE}
-    </p>
+        <p class="sub">
+            اختاري إطلالتج بثقة — {TAGLINE}
+        </p>
 
-    <a class="btn btn-primary" href="#gallery">
-        تصفحي العبايات
-    </a>
+        <a class="btn btn-primary" href="#gallery">
+            تصفحي العبايات
+        </a>
 
-    <a class="btn btn-outline"
-       href="{TELEGRAM_BOT_URL}"
-       target="_blank">
-        تحدثي مع المساعدة
-    </a>
+        <a class="btn btn-outline"
+           href="{TELEGRAM_BOT_URL}"
+           target="_blank"
+           rel="noopener noreferrer">
+            تحدثي مع المساعدة
+        </a>
 
-    <a class="btn btn-outline"
-       href="{wa_link}"
-       target="_blank">
-        واتساب
-    </a>
+        <a class="btn btn-outline"
+           href="{wa_link}"
+           target="_blank"
+           rel="noopener noreferrer">
+            واتساب
+        </a>
 
-    <a class="btn btn-outline"
-       href="{INSTAGRAM_URL}"
-       target="_blank">
-        انستغرام
-    </a>
+        <a class="btn btn-outline"
+           href="{INSTAGRAM_URL}"
+           target="_blank"
+           rel="noopener noreferrer">
+            انستغرام
+        </a>
 
-</div>
-""", unsafe_allow_html=True)
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 
 # ───────────────────────── Gallery section ─────────────────────────
 
 st.markdown(
-    '<div id="gallery"></div>'
-    '<div class="section-title">معرض العبايات</div>'
-    '<p class="section-sub">'
-    'ابحثي بالاسم أو الكود، وللتفاصيل اضغطي على «التفاصيل».'
-    '</p>',
+    """
+    <div id="gallery"></div>
+    <div class="section-title">معرض العبايات</div>
+    <p class="section-sub">
+        ابحثي بالاسم أو الكود، وللتفاصيل اضغطي على «التفاصيل».
+    </p>
+    """,
     unsafe_allow_html=True
 )
 
@@ -343,7 +337,6 @@ q = (query or "").strip().lower()
 
 items = [
     c for c in catalog
-
     if (
         not q
         or q in str(c.get("name", "")).lower()
@@ -441,7 +434,6 @@ else:
             "عرض المزيد",
             width="stretch"
         ):
-
             st.session_state.shown += PAGE_SIZE
             st.rerun()
 
@@ -458,42 +450,47 @@ if info:
     )
 
     with st.expander("التوصيل والاستبدال والسياسات"):
-
         st.markdown(info)
 
 
 # ───────────────────────── Contact section ─────────────────────────
 
-st.markdown(f"""
-<div class="contact">
+st.markdown(
+    f"""
+    <div class="contact">
 
-    <h3>تواصلي معنا</h3>
+        <h3>تواصلي معنا</h3>
 
-    <p>
-        نسعد بخدمتج ونرد على كل استفساراتج
-    </p>
+        <p>
+            نسعد بخدمتج ونرد على كل استفساراتج
+        </p>
 
-    <a class="btn btn-light"
-       href="{TELEGRAM_BOT_URL}"
-       target="_blank">
-        تحدثي مع المساعدة على Telegram
-    </a>
+        <a class="btn btn-light"
+           href="{TELEGRAM_BOT_URL}"
+           target="_blank"
+           rel="noopener noreferrer">
+            تحدثي مع المساعدة على Telegram
+        </a>
 
-    <a class="btn btn-ghost"
-       href="{wa_link}"
-       target="_blank">
-        واتساب: {WHATSAPP_NUMBER}
-    </a>
+        <a class="btn btn-ghost"
+           href="{wa_link}"
+           target="_blank"
+           rel="noopener noreferrer">
+            واتساب: {WHATSAPP_NUMBER}
+        </a>
 
-    <a class="btn btn-ghost"
-       href="{INSTAGRAM_URL}"
-       target="_blank">
-        انستغرام {INSTAGRAM_HANDLE}
-    </a>
+        <a class="btn btn-ghost"
+           href="{INSTAGRAM_URL}"
+           target="_blank"
+           rel="noopener noreferrer">
+            انستغرام {INSTAGRAM_HANDLE}
+        </a>
 
-</div>
+    </div>
 
-<div id="footer">
-    {BRAND} · {TAGLINE}
-</div>
-""", unsafe_allow_html=True)
+    <div id="footer">
+        {BRAND} · {TAGLINE}
+    </div>
+    """,
+    unsafe_allow_html=True
+)
